@@ -2,12 +2,19 @@
   height: 65px;
   display: flex;
   align-items: center;
-
-  padding: 15px;
+  justify-content: space-between;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .header img {
   width: 200px;
+  margin-left: -30px;
+}
+
+.header-left {
+  background-color: yellow;
+  flex: 1;
 }
 
 .menu {
@@ -23,6 +30,7 @@
 .search-container {
   background-color: #101010;
   min-height: 30px;
+  min-width: 275px;
   border: 1px solid #a1a1a1;
   display: flex;
   justify-content: flex-end;
