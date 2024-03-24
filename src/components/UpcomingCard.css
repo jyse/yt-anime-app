@@ -1,0 +1,40 @@
+.media-card {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 280px;
+}
+
+.media-card .image {
+  height: 230px;
+}
+
+.media-card img {
+  object-fit: cover;
+}
+
+.title {
+  font-family: "Mukta", sans-serif;
+  height: fit-content;
+  /* color: #f3b416; */
+  color: #5e70e0;
+  font-size: 8px;
+  text-align: center;
+  margin: 10px;
+}
+
+.episode {
+  position: absolute;
+  bottom: 5px;
+  left: 25%;
+  right: 25%;
+}
+
+.episode p {
+  color: white;
+  font-family: "Mukta", sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  text-align: center;
+}

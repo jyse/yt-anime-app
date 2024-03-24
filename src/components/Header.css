@@ -1,0 +1,36 @@
+.header {
+  height: 65px;
+  display: flex;
+  align-items: center;
+
+  padding: 15px;
+}
+
+.header img {
+  width: 200px;
+}
+
+.menu {
+  background-color: #1b1b1b;
+  display: flex;
+  gap: 15px;
+}
+
+.menu h2:first-of-type {
+  color: #3d52d5;
+}
+
+.search-container {
+  background-color: #101010;
+  min-height: 30px;
+  border: 1px solid #a1a1a1;
+  display: flex;
+  justify-content: flex-end;
+  flex: 0.5;
+  border-radius: 4px;
+}
+
+.search-container .MuiSvgIcon-root {
+  color: #3d52d5;
+  font-size: 30px;
+}

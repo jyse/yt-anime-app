@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Mukta:wght@200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #0d0a0b;
+}
+
+body h2 {
+  font-family: "League Spartan", sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.anime-app {
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  background-color: #1b1b1b;
+  max-width: 1025px;
+  padding: 15px;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.media {
+  flex: 0.7;
+  display: flex;
+  flex-direction: column;
+}
+
+.media-header {
+  background-color: #3d52d5;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #a1a1a1;
+  border-right: 1px solid #a1a1a1;
+  border-left: 1px solid #a1a1a1;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.media-header-title {
+  display: flex;
+  align-items: center;
+}
+
+.media-header img {
+  width: 40px;
+  height: 45px;
+  margin-right: 10px;
+  margin-left: 4px;
+  object-fit: contain;
+}
+
+.media-header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background-color: teal;
+}
+
+.media-header-title > h2 {
+  margin-right: 10px;
+}
+
+.media-header-left h2:first-of-type {
+  color: white !important;
+}
+
+.pagination {
+  display: flex;
+  width: 120px;
+  justify-content: space-around;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.pagination h2 {
+  color: white;
+}
+
+.pagination h2:first-child {
+  background-color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.episodes-upcoming-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border-right: 1px solid #a1a1a1;
+  border-left: 1px solid #a1a1a1;
+  border-bottom: 1px solid #a1a1a1;
+}
+
+.lists {
+  flex: 0.3;
+  background-color: orange;
+}
+.lists-advertisement {
+  border: 1px solid #a1a1a1;
+  margin-bottom: 15px;
+}
+
+.advertisement {
+  background-color: lightsalmon;
+  height: 250px;
+  margin-bottom: 15px;
+  border-right: 1px solid #a1a1a1;
+  border-left: 1px solid #a1a1a1;
+  border-bottom: 1px solid #a1a1a1;
+}
+
+.advertisement img {
+  object-fit: contain;
+  height: 100%;
+}
+.lists-top {
+  border: 1px solid #a1a1a1;
+}
+
+.top-shows p {
+  font-family: "Mukta", sans-serif;
+  color: #3d52d5;
+  font-size: 12px;
+  font-weight: 550;
+  padding-left: 8px;
+}
+
+.top-shows-list {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.episodes-popular-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border-right: 1px solid #a1a1a1;
+  border-left: 1px solid #a1a1a1;
+  border-bottom: 1px solid #a1a1a1;
+}
+.genresList {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.genresList p {
+  font-family: "League Spartan", sans-serif;
+  color: #ececec;
+  font-size: 18px;
+  font-weight: 500;
+  padding-left: 8px;
+}
+
+.lists-genre {
+  margin-top: 15px;
+  border: 1px solid #a1a1a1;
+  padding-bottom: 8px;
+}
