@@ -34,7 +34,7 @@ body h2 {
   gap: 15px;
 }
 
-.media {
+.media-section {
   flex: 0.7;
   display: flex;
   flex-direction: column;
@@ -53,12 +53,12 @@ body h2 {
   border-top-left-radius: 3px;
 }
 
-.media-header-title {
+.media-title {
   display: flex;
   align-items: center;
 }
 
-.media-header img {
+.media-title img {
   width: 40px;
   height: 45px;
   margin-right: 10px;
@@ -66,31 +66,12 @@ body h2 {
   object-fit: contain;
 }
 
-.media-header-left {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  background-color: teal;
-}
-
-.media-header-title > h2 {
-  margin-right: 10px;
-}
-
-.media-header-left h2:first-of-type {
-  color: white !important;
-}
-
 .pagination {
   display: flex;
-  width: 120px;
+  min-width: 120px;
   justify-content: space-around;
   align-items: center;
   margin-right: 5px;
-}
-
-.pagination h2 {
-  color: white;
 }
 
 .pagination h2:first-child {
@@ -104,9 +85,8 @@ body h2 {
   color: black;
 }
 
-.episodes-upcoming-grid {
+.episodes-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   grid-gap: 10px;
   padding: 10px;
   overflow: hidden;
@@ -116,17 +96,21 @@ body h2 {
   border-bottom: 1px solid #a1a1a1;
 }
 
-.lists {
-  flex: 0.3;
-  background-color: orange;
+.episodes-grid.upcoming {
+  grid-template-columns: repeat(4, 1fr);
 }
-.lists-advertisement {
-  border: 1px solid #a1a1a1;
-  margin-bottom: 15px;
+
+.episodes-grid.airing {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.lists-section {
+  flex: 0.3;
+  display: flex;
+  flex-direction: column;
 }
 
 .advertisement {
-  background-color: lightsalmon;
   height: 250px;
   margin-bottom: 15px;
   border-right: 1px solid #a1a1a1;
@@ -138,27 +122,8 @@ body h2 {
   object-fit: contain;
   height: 100%;
 }
-.lists-top {
-  border: 1px solid #a1a1a1;
-}
 
-.top-shows p {
-  font-family: "Mukta", sans-serif;
-  color: #3d52d5;
-  font-size: 12px;
-  font-weight: 550;
-  padding-left: 8px;
-}
-
-.top-shows-list {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.episodes-popular-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
+.popular-shows {
   padding: 10px;
   overflow: hidden;
   margin-bottom: 10px;
@@ -166,22 +131,30 @@ body h2 {
   border-left: 1px solid #a1a1a1;
   border-bottom: 1px solid #a1a1a1;
 }
-.genresList {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+.popular-shows p {
+  font-family: "Mukta", sans-serif;
+  color: #3d52d5;
+  font-size: 12px;
+  font-weight: 550;
+  padding-left: 8px;
 }
 
-.genresList p {
+.genres-anime {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border-right: 1px solid #a1a1a1;
+  border-left: 1px solid #a1a1a1;
+  border-bottom: 1px solid #a1a1a1;
+}
+
+.genres-anime p {
   font-family: "League Spartan", sans-serif;
   color: #ececec;
   font-size: 18px;
   font-weight: 500;
   padding-left: 8px;
-}
-
-.lists-genre {
-  margin-top: 15px;
-  border: 1px solid #a1a1a1;
-  padding-bottom: 8px;
 }
