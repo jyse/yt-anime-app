@@ -6,64 +6,75 @@ import genresList from "../data/genresList";
 import AiringCard from "../components/AiringCard";
 
 function App() {
-  const [upcoming, setUpcoming] = useState([]);
+  const [upcomingAnime, setUpcomingAnime] = useState([]);
+  const [airingAnime, setAiringAnime] = useState([]);
   const [popularAnime, setPopularAnime] = useState([]);
-  const [popular, setPopular] = useState([]);
 
-  const getNewTitles = (episodes) => {
-    const updatedEpisodes = episodes.map((ep) => {
-      const words = ep.title.split(" ");
-
-      let newTitle = "";
-      if (words.length > 5) {
-        newTitle = ep.title.slice(0, 25);
-      } else {
-        newTitle = ep.title;
-      }
-      return { ...ep, newTitle: newTitle };
+  //let chat explain what this does
+  const formatAnimeTitles = (animeList) => {
+    const updatedAnimeList = animeList.map((anime) => {
+      const isLongTitle = anime.title.split(" ").length > 5;
+      const newTitle = isLongTitle ? anime.title.slice(0, 25) : anime.title;
+      return { ...anime, newTitle };
     });
-    return updatedEpisodes;
+    return updatedAnimeList;
   };
 
-  const getEpisodes = (subtype) => {
-    const cachedData = sessionStorage.getItem(subtype);
-    if (cachedData) {
-      const data = JSON.parse(cachedData);
-      updateStateForSubtype(subtype, data.data || []);
+  const fetchAndUpdateAnime = (category) => {
+    const cachedAnime = sessionStorage.getItem(category);
+    if (cachedAnime) {
+      const parsedAnime = JSON.parse(cachedAnime);
+      updateAnimeState(category, parsedAnime.data || []);
       return;
     }
 
-    fetch(`https://api.jikan.moe/v4/top/anime?filter=${subtype}`)
+    fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`)
       .then((res) => res.json())
-      .then((anime) => {
-        sessionStorage.setItem(subtype, JSON.stringify(anime));
-        updateStateForSubtype(subtype, anime.data || []);
+      .then((response) => {
+        console.log(category, "hw ati category at fetch call ");
+        console.log(response, "what is RESPONSE FROM  fetch call ");
+
+        sessionStorage.setItem(category, JSON.stringify(response));
+        updateAnimeState(category, response.data || []);
       })
       .catch((err) => {
-        console.log("❗ERROR MESSAGE: ", err.message);
+        console.log("❗error message: ", err.message);
       });
   };
 
-  const updateStateForSubtype = (subtype, episodes) => {
-    console.log(episodes, "what is in episodes? ");
-    const updatedEpisodes = getNewTitles(episodes);
+  const updateAnimeState = (category, animeList) => {
+    const formattedAnime = formatAnimeTitles(animeList);
+    // console.log(category, "what is in category?");
+    // console.log(formattedAnime, "what is in formatted Anime??");
 
-    if (subtype === "upcoming") {
-      setUpcoming(updatedEpisodes.slice(0, 8));
-    } else if (subtype === "bypopularity") {
-      setUpcoming(updatedEpisodes.slice(0, 20));
-    } else if (subtype === "airing") {
-      setUpcoming(updatedEpisodes.slice(0, 15));
+    switch (category) {
+      case "upcoming":
+        setUpcomingAnime(formattedAnime.slice(0, 8));
+        break;
+      case "airing":
+        setAiringAnime(formattedAnime.slice(0, 20));
+        break;
+      case "bypopularity":
+        setPopularAnime(formattedAnime.slice(0, 15));
+        break;
+      default:
+        console.warn(`Unknown category: ${category}`);
     }
   };
 
   useEffect(() => {
     const staggeredRequest = (endpoint, delay) =>
-      setTimeout(() => getEpisodes(endpoint), delay);
+      setTimeout(() => fetchAndUpdateAnime(endpoint), delay);
     staggeredRequest("upcoming", 0);
     staggeredRequest("bypopularity", 400);
     staggeredRequest("airing", 600);
   }, []);
+
+  // useEffect(() => {
+  //   ["upcoming", "bypopularity", "airing"].forEach((category, index) =>
+  //     setTimeout(() => fetchAndUpdateAnime(category), index * 400)
+  //   );
+  // }, []);
 
   return (
     <div className="anime-app">
@@ -83,10 +94,8 @@ function App() {
               </div>
             </div>
             <div className="episodes-grid upcoming">
-              {upcoming?.map((upcomingEp) => {
-                return (
-                  <UpcomingCard episode={upcomingEp} key={upcomingEp.mal_id} />
-                );
+              {upcomingAnime?.map((anime) => {
+                return <UpcomingCard episode={anime} key={anime.mal_id} />;
               })}
             </div>
 
@@ -96,13 +105,10 @@ function App() {
                 <h2> CURRENTLY AIRING</h2>
               </div>
             </div>
-            {popularAnime.length > 0 ? (
+            {airingAnime.length > 0 ? (
               <div className="episodes-grid airing">
-                {popularAnime?.map((popularAnime) => (
-                  <AiringCard
-                    episode={popularAnime}
-                    key={popularAnime.mal_id}
-                  />
+                {airingAnime?.map((anime) => (
+                  <AiringCard episode={anime} key={anime.mal_id} />
                 ))}
               </div>
             ) : (
@@ -127,8 +133,8 @@ function App() {
               </div>
             </div>
             <div className="popular-shows">
-              {popular?.map((popEp) => {
-                return <p>{popEp.newTitle}</p>;
+              {popularAnime?.map((anime) => {
+                return <p>{anime.newTitle}</p>;
               })}
             </div>
 
