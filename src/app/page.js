@@ -5,6 +5,15 @@ import UpcomingCard from "../components/UpcomingCard";
 import genresList from "../data/genresList";
 import AiringCard from "../components/AiringCard";
 
+const makeRequest = async (url, method, body) => {
+  const response = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  return response.json();
+};
+
 function App() {
   const [upcomingAnime, setUpcomingAnime] = useState([]);
   const [airingAnime, setAiringAnime] = useState([]);
@@ -27,8 +36,9 @@ function App() {
   };
 
   const getAnime = async (category) => {
+    console.log(category, "what is in category here 🌸");
     const cachedAnime = sessionStorage.getItem(category);
-    console.log(cachedAnime, "WHAT IS CACHED ANIME 👀👀👀👀👀");
+
     if (cachedAnime && isCacheValid(cachedAnime)) {
       const parsedAnime = JSON.parse(cachedAnime);
       updateAnimeState(category, parsedAnime.data || []);
@@ -36,15 +46,21 @@ function App() {
     }
 
     try {
-      const res = await fetch(`/api/anime/${category}`);
-      console.log(res, "what is in res here? client side 🍬🍬🍬🍬🍬🍬🍬 ");
-      if (!res.ok) {
-        throw new Error(`Failed to fetch anime category: ${category}`);
+      const response = await fetch(`/api/anime/${category}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch anime category: ${category}, Status: ${response.status}`
+        );
       }
-      const { animeData } = await res.json();
+
+      const { data } = await response.json();
 
       // Cache the new data with a timestamp
-      const dataToCache = { data: animeData, timestamp: Date.now() };
+      const dataToCache = { data, timestamp: Date.now() };
       sessionStorage.setItem(category, JSON.stringify(dataToCache));
 
       updateAnimeState(category, data);
