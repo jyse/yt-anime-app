@@ -22,6 +22,8 @@ function App() {
 
   const fetchAndUpdateAnime = (category) => {
     const cachedAnime = sessionStorage.getItem(category);
+    console.log(category, "what is category of cached Anime");
+    console.log(cachedAnime, "what is cached Anime");
     if (cachedAnime) {
       const parsedAnime = JSON.parse(cachedAnime);
       updateAnimeState(category, parsedAnime.data || []);
@@ -66,8 +68,8 @@ function App() {
     const staggeredRequest = (endpoint, delay) =>
       setTimeout(() => fetchAndUpdateAnime(endpoint), delay);
     staggeredRequest("upcoming", 0);
-    staggeredRequest("bypopularity", 400);
-    staggeredRequest("airing", 600);
+    staggeredRequest("bypopularity", 1100);
+    staggeredRequest("airing", 400);
   }, []);
 
   // useEffect(() => {
