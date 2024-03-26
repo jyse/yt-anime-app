@@ -23,21 +23,11 @@ function AiringCard({ episode }) {
       <div className="card-details">
         <div className="card-title">
           <h3>{episode.newTitle}</h3>
+          <p>Genres: {genres}</p>
+          <p>Episodes: {episode.episodes || "--"}</p>
+          <p>Score: {episode.score}</p>
           <p>
-            <span className="label"> Genres:</span> {genres}
-          </p>
-          <p>
-            <span className="label">Episodes:</span> {episode.episodes || "--"}
-          </p>
-          <p>
-            <span className="label"> Rating:</span> {episode.rating}
-          </p>
-          <p>
-            <span className="label"> Score:</span> {episode.score}
-          </p>
-          <p>
-            <span className="label">Favorites:</span> {episode.favorites},
-            Members: {episode.members}
+            Favorites: {episode.favorites}, Members: {episode.members}
           </p>
         </div>
       </div>
