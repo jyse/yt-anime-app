@@ -21,36 +21,36 @@ function App() {
 
   const isCacheValid = (cachedData) => {
     if (!cachedData) return false;
+
     const { timestamp } = JSON.parse(cachedData);
-    // Consider data stale if it's more than 1 hr old
     return Date.now() - timestamp < 3600000;
   };
 
-  const fetchAndUpdateAnime = (category) => {
+  const getAnime = async (category) => {
     const cachedAnime = sessionStorage.getItem(category);
+    console.log(cachedAnime, "WHAT IS CACHED ANIME 👀👀👀👀👀");
     if (cachedAnime && isCacheValid(cachedAnime)) {
       const parsedAnime = JSON.parse(cachedAnime);
       updateAnimeState(category, parsedAnime.data || []);
       return;
     }
 
-    fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`)
-      .then((res) => res.json())
-      .then((response) => {
-        console.log(response, "what is response here? 🐲");
-        const dataToCache = { data: response.data, timestamp: Date.now() };
-        sessionStorage.setItem(category, JSON.stringify(dataToCache));
-        updateAnimeState(category, response.data || []);
-      })
-      .catch((err) => {
-        if (err.status === 429) {
-          console.log(
-            "👹 Rate limit exceeded, Please wait a moment and try again"
-          );
-        } else {
-          console.log("❗ERROR MESSAGE: ", err.message);
-        }
-      });
+    try {
+      const res = await fetch(`/api/anime/${category}`);
+      console.log(res, "what is in res here? client side 🍬🍬🍬🍬🍬🍬🍬 ");
+      if (!res.ok) {
+        throw new Error(`Failed to fetch anime category: ${category}`);
+      }
+      const { animeData } = await res.json();
+
+      // Cache the new data with a timestamp
+      const dataToCache = { data: animeData, timestamp: Date.now() };
+      sessionStorage.setItem(category, JSON.stringify(dataToCache));
+
+      updateAnimeState(category, data);
+    } catch (err) {
+      console.error("❗error message: ", err.message);
+    }
   };
 
   const updateAnimeState = (category, animeList) => {
@@ -72,9 +72,11 @@ function App() {
   };
 
   useEffect(() => {
-    ["upcoming", "bypopularity", "airing"].forEach((category) =>
-      fetchAndUpdateAnime(category)
-    );
+    const staggeredRequest = (category, delay) =>
+      setTimeout(() => getAnime(category), delay);
+    staggeredRequest("upcoming", 0);
+    staggeredRequest("bypopularity", 500);
+    staggeredRequest("airing", 600);
   }, []);
 
   return (
@@ -158,3 +160,66 @@ function App() {
 }
 
 export default App;
+
+// const fetchAndUpdateAnime = (category) => {
+//   const cachedAnime = sessionStorage.getItem(category);
+//   if (cachedAnime && isCacheValid(cachedAnime)) {
+//     const parsedAnime = JSON.parse(cachedAnime);
+//     updateAnimeState(category, parsedAnime.data || []);
+//     return;
+//   }
+
+//   fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`)
+//     .then((res) => res.json())
+//     .then((response) => {
+//       console.log(response, "what is response here? 🐲");
+//       const dataToCache = { data: response.data, timestamp: Date.now() };
+//       sessionStorage.setItem(category, JSON.stringify(dataToCache));
+//       updateAnimeState(category, response.data || []);
+//     })
+//     .catch((err) => {
+//       if (err.status === 429) {
+//         console.log(
+//           "👹 Rate limit exceeded, Please wait a moment and try again"
+//         );
+//       } else {
+//         console.log("❗ERROR MESSAGE: ", err.message);
+//       }
+//     });
+// };
+
+//   fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`)
+//     .then((res) => res.json())
+//     .then((response) => {
+//       console.log(response, "what is response here? 🐲");
+//       const dataToCache = { data: response.data, timestamp: Date.now() };
+//       sessionStorage.setItem(category, JSON.stringify(dataToCache));
+//       updateAnimeState(category, response.data || []);
+//     })
+//     .catch((err) => {
+//       if (err.status === 429) {
+//         console.log(
+//           "👹 Rate limit exceeded, Please wait a moment and try again"
+//         );
+//       } else {
+//         console.log("❗ERROR MESSAGE: ", err.message);
+//       }
+//     });
+// };
+
+// .then((res) => res.json())
+//     .then((response) => {
+//       console.log(response, "what is response here? 🐲");
+//       const dataToCache = { data: response.data, timestamp: Date.now() };
+//       sessionStorage.setItem(category, JSON.stringify(dataToCache));
+//       updateAnimeState(category, response.data || []);
+//     })
+//     .catch((err) => {
+//       if (err.status === 429) {
+//         console.log(
+//           "👹 Rate limit exceeded, Please wait a moment and try again"
+//         );
+//       } else {
+//         console.log("❗ERROR MESSAGE: ", err.message);
+//       }
+//     });
