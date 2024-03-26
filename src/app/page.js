@@ -7,8 +7,8 @@ import AiringCard from "../components/AiringCard";
 
 function App() {
   const [upcoming, setUpcoming] = useState([]);
-  const [popular, setPopular] = useState([]);
   const [popularAnime, setPopularAnime] = useState([]);
+  const [popular, setPopular] = useState([]);
 
   const getNewTitles = (episodes) => {
     const updatedEpisodes = episodes.map((ep) => {
@@ -29,7 +29,7 @@ function App() {
     const cachedData = sessionStorage.getItem(subtype);
     if (cachedData) {
       const data = JSON.parse(cachedData);
-      updateStateForSubtype(subtype, data);
+      updateStateForSubtype(subtype, data.data || []);
       return;
     }
 
@@ -37,39 +37,23 @@ function App() {
       .then((res) => res.json())
       .then((anime) => {
         sessionStorage.setItem(subtype, JSON.stringify(anime));
-        updateStateForSubtype(subtype, anime);
+        updateStateForSubtype(subtype, anime.data || []);
       })
       .catch((err) => {
-        console.log(err);
-        if (err.status === 429) {
-          console.log(
-            "👹 Rate limit exceeded, Please wait a moment and try again"
-          );
-        } else {
-          console.log("❗ERROR MESSAGE: ", err.message);
-        }
+        console.log("❗ERROR MESSAGE: ", err.message);
       });
   };
 
-  const updateStateForSubtype = (subtype, anime) => {
-    let episodes = anime.data;
-
-    if (subtype === "upcoming") {
-      episodes = episodes.slice(0, 8);
-    } else if (subtype === "bypopularity") {
-      episodes = episodes.slice(0, 20);
-    } else if (subtype === "airing") {
-      episodes = episodes.slice(0, 15);
-    }
-
+  const updateStateForSubtype = (subtype, episodes) => {
+    console.log(episodes, "what is in episodes? ");
     const updatedEpisodes = getNewTitles(episodes);
 
     if (subtype === "upcoming") {
-      setUpcoming(updatedEpisodes);
+      setUpcoming(updatedEpisodes.slice(0, 8));
     } else if (subtype === "bypopularity") {
-      setPopular(updatedEpisodes);
+      setUpcoming(updatedEpisodes.slice(0, 20));
     } else if (subtype === "airing") {
-      setPopularAnime(updatedEpisodes);
+      setUpcoming(updatedEpisodes.slice(0, 15));
     }
   };
 
