@@ -5,22 +5,19 @@ import UpcomingCard from "../components/UpcomingCard";
 import genresList from "../data/genresList";
 import AiringCard from "../components/AiringCard";
 
-function App() {
+const App = () => {
   const [upcomingAnime, setUpcomingAnime] = useState([]);
   const [airingAnime, setAiringAnime] = useState([]);
   const [popularAnime, setPopularAnime] = useState([]);
 
-  //let chat explain what this does
-  const formatAnimeTitles = (animeList) => {
-    const updatedAnimeList = animeList.map((anime) => {
+  const formatAnimeTitles = (animeList) =>
+    animeList.map((anime) => {
       const isLongTitle = anime.title.split(" ").length > 5;
-      const newTitle = isLongTitle ? anime.title.slice(0, 25) : anime.title;
+      const newTitle = isLongTitle ? `${anime.title.slice(0, 25)}...` : anime.title;
       return { ...anime, newTitle };
     });
-    return updatedAnimeList;
-  };
 
-  const fetchAndUpdateAnime = (category) => {
+  const fetchAndUpdateAnime = async (category) => {
     const cachedAnime = sessionStorage.getItem(category);
     if (cachedAnime) {
       const parsedAnime = JSON.parse(cachedAnime);
@@ -28,25 +25,18 @@ function App() {
       return;
     }
 
-    fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`)
-      .then((res) => res.json())
-      .then((response) => {
-        console.log(category, "hw ati category at fetch call ");
-        console.log(response, "what is RESPONSE FROM  fetch call ");
-
-        sessionStorage.setItem(category, JSON.stringify(response));
-        updateAnimeState(category, response.data || []);
-      })
-      .catch((err) => {
-        console.log("❗error message: ", err.message);
-      });
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`);
+      const data = await response.json();
+      sessionStorage.setItem(category, JSON.stringify(data));
+      updateAnimeState(category, data.data || []);
+    } catch (err) {
+      console.error("Error fetching anime:", err);
+    }
   };
 
   const updateAnimeState = (category, animeList) => {
     const formattedAnime = formatAnimeTitles(animeList);
-    // console.log(category, "what is in category?");
-    // console.log(formattedAnime, "what is in formatted Anime??");
-
     switch (category) {
       case "upcoming":
         setUpcomingAnime(formattedAnime.slice(0, 8));
@@ -63,18 +53,13 @@ function App() {
   };
 
   useEffect(() => {
-    const staggeredRequest = (endpoint, delay) =>
-      setTimeout(() => fetchAndUpdateAnime(endpoint), delay);
-    staggeredRequest("upcoming", 0);
-    staggeredRequest("bypopularity", 400);
-    staggeredRequest("airing", 600);
+    const fetchAnimeData = async () => {
+      await fetchAndUpdateAnime("upcoming");
+      await fetchAndUpdateAnime("bypopularity");
+      await fetchAndUpdateAnime("airing");
+    };
+    fetchAnimeData();
   }, []);
-
-  // useEffect(() => {
-  //   ["upcoming", "bypopularity", "airing"].forEach((category, index) =>
-  //     setTimeout(() => fetchAndUpdateAnime(category), index * 400)
-  //   );
-  // }, []);
 
   return (
     <div className="anime-app">
@@ -133,9 +118,7 @@ function App() {
               </div>
             </div>
             <div className="popular-shows">
-              {popularAnime?.map((anime) => {
-                return <p>{anime.newTitle}</p>;
-              })}
+           {popularAnime.map((anime) => <p key={anime.mal_id}>{anime.title}</p>)}
             </div>
 
             <div className="media-header">
@@ -157,3 +140,4 @@ function App() {
 }
 
 export default App;
+
