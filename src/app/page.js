@@ -10,7 +10,6 @@ function App() {
   const [airingAnime, setAiringAnime] = useState([]);
   const [popularAnime, setPopularAnime] = useState([]);
 
-  //let chat explain what this does
   const formatAnimeTitles = (animeList) => {
     const updatedAnimeList = animeList.map((anime) => {
       const isLongTitle = anime.title.split(" ").length > 5;
@@ -20,11 +19,16 @@ function App() {
     return updatedAnimeList;
   };
 
+  const isCacheValid = (cachedData) => {
+    if (!cachedData) return false;
+    const { timestamp } = JSON.parse(cachedData);
+    // Consider data stale if it's more than 1 hr old
+    return Date.now() - timestamp < 3600000;
+  };
+
   const fetchAndUpdateAnime = (category) => {
     const cachedAnime = sessionStorage.getItem(category);
-    console.log(category, "what is category of cached Anime");
-    console.log(cachedAnime, "what is cached Anime");
-    if (cachedAnime) {
+    if (cachedAnime && isCacheValid(cachedAnime)) {
       const parsedAnime = JSON.parse(cachedAnime);
       updateAnimeState(category, parsedAnime.data || []);
       return;
@@ -33,21 +37,24 @@ function App() {
     fetch(`https://api.jikan.moe/v4/top/anime?filter=${category}`)
       .then((res) => res.json())
       .then((response) => {
-        console.log(category, "hw ati category at fetch call ");
-        console.log(response, "what is RESPONSE FROM  fetch call ");
-
-        sessionStorage.setItem(category, JSON.stringify(response));
+        console.log(response, "what is response here? 🐲");
+        const dataToCache = { data: response.data, timestamp: Date.now() };
+        sessionStorage.setItem(category, JSON.stringify(dataToCache));
         updateAnimeState(category, response.data || []);
       })
       .catch((err) => {
-        console.log("❗error message: ", err.message);
+        if (err.status === 429) {
+          console.log(
+            "👹 Rate limit exceeded, Please wait a moment and try again"
+          );
+        } else {
+          console.log("❗ERROR MESSAGE: ", err.message);
+        }
       });
   };
 
   const updateAnimeState = (category, animeList) => {
     const formattedAnime = formatAnimeTitles(animeList);
-    // console.log(category, "what is in category?");
-    // console.log(formattedAnime, "what is in formatted Anime??");
 
     switch (category) {
       case "upcoming":
@@ -65,18 +72,10 @@ function App() {
   };
 
   useEffect(() => {
-    const staggeredRequest = (endpoint, delay) =>
-      setTimeout(() => fetchAndUpdateAnime(endpoint), delay);
-    staggeredRequest("upcoming", 0);
-    staggeredRequest("bypopularity", 1100);
-    staggeredRequest("airing", 400);
+    ["upcoming", "bypopularity", "airing"].forEach((category) =>
+      fetchAndUpdateAnime(category)
+    );
   }, []);
-
-  // useEffect(() => {
-  //   ["upcoming", "bypopularity", "airing"].forEach((category, index) =>
-  //     setTimeout(() => fetchAndUpdateAnime(category), index * 400)
-  //   );
-  // }, []);
 
   return (
     <div className="anime-app">
